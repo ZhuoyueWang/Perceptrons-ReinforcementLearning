@@ -16,7 +16,7 @@ def convert(fileName):
                     eachNumber.append('0')
             numbers.append(eachNumber)
 
-    vectorFile = open('output.txt','w')
+    vectorFile = open('trainoutput.txt','w')
     for number in numbers:
         for pixel in number:
             vectorFile.write(pixel)
@@ -24,7 +24,7 @@ def convert(fileName):
     vectorFile.close()
 
 def main():
-    convert("testimages")
+    convert("trainingimages")
 
 if __name__ == "__main__":
     main()
