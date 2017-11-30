@@ -1,5 +1,6 @@
 import numpy as np
 import math
+import random
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from collections import deque
@@ -60,7 +61,10 @@ def read_test_data():
 
 
 
-def part1_1_classifier(image_data,data_labels,data_depth,image_test,test_labels,test_depth):
+
+
+
+def perceptrons_classifier(image_data,data_labels,data_depth,image_test,test_labels,test_depth,epoch,isBia,isRandom,isShuffle,alpha):
     [image_depth,image_rows, image_columns] = np.shape(image_data)
 
     priors = [0 for i in range(10)]
@@ -156,137 +160,12 @@ def part1_1_classifier(image_data,data_labels,data_depth,image_test,test_labels,
     print("the total accuracy is ")
     print(totalAccuracy)
 
-    print("each digit's examples on the highest and lowest posterior probabilities")
-    for i in range(10):
-        print()
-        print("digit: {}".format(i))
-        print("highest posterior example")
-        for a in range(28):
-            for b in range(28):
-                print(image_test[(highPosteriorIndex[i])][a][b], end='')
-            print()
-        print()
-        print("lowest posterior example")
-        for a in range(28):
-            for b in range(28):
-                print(image_test[(lowPosteriorIndex[i])][a][b], end='')
-            print()
 
-
-
-    print("four pairs of digits that have the highest confusion rates:")
-    print("4 vs 9 | 5 vs 3 | 8 vs 3 | 7 vs 9")
-    print("4 vs 9's odd ratio:")
-    oddRatio = [[0 for k in range(test_columns)] for j in range(test_rows)]
-    hood4 = 0
-    hood9 = 0
-    for x in range(test_rows):
-        for y in range(test_columns):
-            temp4 = math.log(prob_table1[4][x][y])
-            hood4 += math.log(prob_table1[4][x][y])
-            temp9 = math.log(prob_table1[9][x][y])
-            hood9 += math.log(prob_table1[9][x][y])
-            oddRatio[x][y] = temp4/temp9
-    for x in range(test_rows):
-        for y in range(test_columns):
-            if oddRatio[x][y] > 1:
-                oddRatio[x][y] = '+'
-            elif oddRatio[x][y] > 0.8 and oddRatio[x][y] < 1.2:
-                oddRatio[x][y] = ' '
-            else:
-                oddRatio[x][y] = '-'
-    print("4's feature likelihood is {}".format(hood4))
-    print("9's feature likelihood is {}".format(hood9))
-    for i in range(28):
-        for j in range(28):
-            print(oddRatio[i][j], end = '')
-        print()
-
-    print("5 vs 3's odd ratio:")
-    oddRatio = [[0 for k in range(test_columns)] for j in range(test_rows)]
-    hood4 = 0
-    hood9 = 0
-    for x in range(test_rows):
-        for y in range(test_columns):
-            temp4 = math.log(prob_table1[5][x][y])
-            hood4 += math.log(prob_table1[5][x][y])
-            temp9 = math.log(prob_table1[3][x][y])
-            hood9 += math.log(prob_table1[3][x][y])
-            oddRatio[x][y] = temp4/temp9
-    for x in range(test_rows):
-        for y in range(test_columns):
-            if oddRatio[x][y] > 1:
-                oddRatio[x][y] = '+'
-            elif oddRatio[x][y] > 0.8 and oddRatio[x][y] < 1.2:
-                oddRatio[x][y] = ' '
-            else:
-                oddRatio[x][y] = '-'
-
-    print("5's feature likelihood is {}".format(hood4))
-    print("3's feature likelihood is {}".format(hood9))
-    for i in range(28):
-        for j in range(28):
-            print(oddRatio[i][j], end = '')
-        print()
-
-    print("8 vs 3's odd ratio:")
-    hood4 = 0
-    hood9 = 0
-    oddRatio = [[0 for k in range(test_columns)] for j in range(test_rows)]
-    for x in range(test_rows):
-        for y in range(test_columns):
-            temp4 = math.log(prob_table1[8][x][y])
-            hood4 += math.log(prob_table1[8][x][y])
-            temp9 = math.log(prob_table1[3][x][y])
-            hood9 += math.log(prob_table1[3][x][y])
-            oddRatio[x][y] = temp4/temp9
-    for x in range(test_rows):
-        for y in range(test_columns):
-            if oddRatio[x][y] > 1:
-                oddRatio[x][y] = '+'
-            elif oddRatio[x][y] > 0.8 and oddRatio[x][y] < 1.2:
-                oddRatio[x][y] = ' '
-            else:
-                oddRatio[x][y] = '-'
-
-    print("8's feature likelihood is {}".format(hood4))
-    print("3's feature likelihood is {}".format(hood9))
-    for i in range(28):
-        for j in range(28):
-            print(oddRatio[i][j], end = '')
-        print()
-
-    print("7 vs 9's odd ratio:")
-    hood4 = 0
-    hood9 = 0
-    oddRatio = [[0 for k in range(test_columns)] for j in range(test_rows)]
-    for x in range(test_rows):
-        for y in range(test_columns):
-            temp4 = math.log(prob_table1[7][x][y])
-            hood4 += math.log(prob_table1[7][x][y])
-            temp9 = math.log(prob_table1[9][x][y])
-            hood9 += math.log(prob_table1[9][x][y])
-            oddRatio[x][y] = temp4/temp9
-    for x in range(test_rows):
-        for y in range(test_columns):
-            if oddRatio[x][y] > 1:
-                oddRatio[x][y] = '+'
-            elif oddRatio[x][y] > 0.8 and oddRatio[x][y] < 1.2:
-                oddRatio[x][y] = ' '
-            else:
-                oddRatio[x][y] = '-'
-
-    print("7's feature likelihood is {}".format(hood4))
-    print("9's feature likelihood is {}".format(hood9))
-    for i in range(28):
-        for j in range(28):
-            print(oddRatio[i][j], end = '')
-        print()
 
 def main():
     image_data, data_labels,data_depth = read_training_data()
     image_test, test_labels,test_depth = read_test_data()
-    result = part1_1_classifier(image_data,data_labels,data_depth,image_test,test_labels,test_depth)
+    result = perceptrons_classifier(image_data,data_labels,data_depth,image_test,test_labels,test_depth,100,False,True,True,100)
 
 if __name__== "__main__":
   main()
