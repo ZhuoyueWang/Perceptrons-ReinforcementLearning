@@ -121,6 +121,8 @@ def perceptrons_classifier(image_data,data_labels,data_depth,image_test,test_lab
                         weight[trueLabel][x][y] = weight[trueLabel][x][y]+alpha*data[x][y]
                         weight[bestLabel][x][y] = weight[bestLabel][x][y]-alpha*data[x][y]
 
+
+
     print("finish training")
     #testing
     totalAccuracy = 0
@@ -129,24 +131,22 @@ def perceptrons_classifier(image_data,data_labels,data_depth,image_test,test_lab
         test = image_test[i]
         trueLabel = test_labels[i]
         bestLabel = -1
-        numCurrDight[trueLabel] += 1
+        maxResult = -99999
         for d in range(10):
             result = bias
-            maxResult = -99999
             for x in range(image_rows):
                 for y in range(image_columns):
                     result += weight[d][x][y]*test[x][y]+bias
             if result > maxResult:
                 maxResult = result
                 bestLabel = d
-
         confusion[trueLabel][bestLabel] += 1
         if trueLabel == bestLabel:
             totalAccuracy += 1
 
     for i in range(10):
         for j in range(10):
-            confusion[i][j] = confusion[i][j]/test_labels.count(i)
+            confusion[i][j] = round(confusion[i][j]/test_labels.count(i), 4)
 
     print("the confusion matrix is ")
     for i in range(10):
@@ -162,7 +162,7 @@ def perceptrons_classifier(image_data,data_labels,data_depth,image_test,test_lab
 def main():
     image_data, data_labels,data_depth = read_training_data()
     image_test, test_labels,test_depth = read_test_data()
-    result = perceptrons_classifier(image_data,data_labels,data_depth,image_test,test_labels,test_depth,3,False,True,True)
+    result = perceptrons_classifier(image_data,data_labels,data_depth,image_test,test_labels,test_depth,2,False,True,True)
 
 if __name__== "__main__":
   main()
