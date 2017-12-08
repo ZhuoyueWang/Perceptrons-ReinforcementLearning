@@ -12,6 +12,11 @@ class image:
         self.imagelist = _imagelist
         self.label = _label
 
+class digit:
+    def __init__(self, _weight, _label):
+        self.weight = _weight
+        self.label = _label
+
 def read_training_data():
     trainingFile = open("trainIamageOutput1.txt", "r")
     lines = trainingFile.readlines()
@@ -74,30 +79,37 @@ def perceptrons_classifier(image_data,data_labels,data_depth,image_test,test_lab
 
     num_features = 2
     bias = 0
-    weight = [[[0 for d in range(28)] for x in range(28)] for y in range(10)]
+
     images = []
+    digits = []
     for d in range(10):
         for i in range(28):
             for j in range(28):
                 if isRandom:
-                    weight[d][i][j] = 0
+                    weight = [[0 for x in range(28)] for y in range(28)]
+                    weight[i][j] = 0
+                    digits.append(digit(weight, d))
                 else:
-                    weight[d][i][j] = random.uniform(0, 1)
+                    weight = [[0 for x in range(28)] for y in range(28)]
+                    weight[i][j] = random.uniform(0, 1)
+                    digits.append(digit(weight, d))
+
     for i in range(data_depth):
         images.append(image(image_data[i], data_labels[i]))
 
-    if isShuffle:
-        random.shuffle(images,random.random)
     if isBia:
         bias = 1
     else:
         bias = 0
 
-    confusion = [[0 for x in range(10)] for y in range(10)]
 
     #training
+    accuracy = []
     for step in range(1,epoch+1, 1):
         alpha = 5 / (5 + step)
+        incorrect = 0
+        if isShuffle:
+            random.shuffle(images,random.random)
         for i in range(len(images)):
             data = images[i].imagelist
             maxResult = -99999
@@ -106,21 +118,26 @@ def perceptrons_classifier(image_data,data_labels,data_depth,image_test,test_lab
                 result = 0
                 for x in range(image_rows):
                     for y in range(image_columns):
-                        result += weight[d][x][y]*data[x][y]+bias
+                        result += (digits[d].weight)[x][y]*data[x][y]+bias
                 if result > maxResult:
                     maxResult = result
                     bestLabel = d
 
             trueLabel = images[i].label
             if bestLabel != trueLabel:
+                incorrect += 1
                 for x in range(image_rows):
                     for y in range(image_columns):
-                        weight[trueLabel][x][y] = weight[trueLabel][x][y]+alpha*data[x][y]
-                        weight[bestLabel][x][y] = weight[bestLabel][x][y]-alpha*data[x][y]
+                        (digits[trueLabel].weight)[x][y] = (digits[trueLabel].weight)[x][y]+alpha*data[x][y]
+                        (digits[bestLabel].weight)[x][y] = (digits[bestLabel].weight)[x][y]-alpha*data[x][y]
+        currAcrc = round(((len(images)-incorrect)/len(images)), 4)
+        print("step {0}, accuracy {1}".format(step, currAcrc))
+        accuracy.append(currAcrc)
+
+    confusion = [[0 for x in range(10)] for y in range(10)]
 
     #testing
     totalAccuracy = 0
-    numCurrDight = [0 for x in range(10)]
     for i in range(test_depth):
         test = image_test[i]
         trueLabel = test_labels[i]
@@ -130,7 +147,7 @@ def perceptrons_classifier(image_data,data_labels,data_depth,image_test,test_lab
             result = bias
             for x in range(image_rows):
                 for y in range(image_columns):
-                    result += weight[d][x][y]*test[x][y]+bias
+                    result += (digits[d].weight)[x][y]*test[x][y]+bias
             if result > maxResult:
                 maxResult = result
                 bestLabel = d
@@ -143,21 +160,27 @@ def perceptrons_classifier(image_data,data_labels,data_depth,image_test,test_lab
             confusion[i][j] = round(confusion[i][j]/test_labels.count(i), 4)
     totalAccuracy = totalAccuracy / test_depth
 
-    return confusion,totalAccuracy
-    '''
+
     print("the confusion matrix is ")
     for i in range(10):
         for j in range(10):
+            #print("HERE")
             print(confusion[i][j], end=" ")
         print()
     print("the total accuracy is ")
     print(totalAccuracy)
-    '''
+
+    return confusion,totalAccuracy
+
+
+
 
 
 def main():
     image_data, data_labels,data_depth = read_training_data()
     image_test, test_labels,test_depth = read_test_data()
+    perceptrons_classifier(image_data,data_labels,data_depth,image_test,test_labels,test_depth,100,True,False,True)
+    '''
     confusionList = [0 for i in range(1,101)]
     accuracyList = [0 for i in range(1,101)]
     for i in range(1,101):
@@ -170,8 +193,10 @@ def main():
         for j in range(10):
             print(confusionList[idx][i][j], end=" ")
         x = np.linspace(1,101,1)
+    '''
     plt.plot(x,accuracyList,'bo')
     plt.savefig('result.png')
+    
 
 if __name__== "__main__":
   main()
