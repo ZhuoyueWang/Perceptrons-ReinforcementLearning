@@ -196,7 +196,7 @@ def main():
     '''
     plt.plot(x,accuracyList,'bo')
     plt.savefig('result.png')
-    
+
 
 if __name__== "__main__":
   main()
