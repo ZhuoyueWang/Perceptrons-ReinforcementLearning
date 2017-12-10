@@ -10,8 +10,10 @@ def training(Q,initial,Qfail,N,Nfail):
     state = initial
     paddle_height = 0.2
     count = 0
+    # parameters C and gamma
     C = 520
     gamma = 0.7
+
     #initial state
     ball_x = state[0]
     ball_y = state[1]
@@ -131,8 +133,6 @@ def testing(Q,initial,Qfail,N,Nfail):
     state = initial
     paddle_height = 0.2
     count = 0
-    C = 5
-    gamma = 2
     #initial state
 
     ball_x = state[0]
@@ -176,6 +176,8 @@ def testing(Q,initial,Qfail,N,Nfail):
             paddle_y = 1 - paddle_height
         ball_x += velocity_x
         ball_y += velocity_y
+
+        # special conditions
         if ball_y < 0 :
             ball_y = -ball_y
             velocity_y = -velocity_y
@@ -193,6 +195,7 @@ def testing(Q,initial,Qfail,N,Nfail):
             velocity_y = -velocity_y + V
             if abs(velocity_x) < 0.03 or abs(velocity_x) > 1:
                 velocity_x = velocity_x - U
+            # count number of bounce
             count += 1
 
         state = [ball_x,ball_y,velocity_x,velocity_y,paddle_y]
@@ -200,7 +203,7 @@ def testing(Q,initial,Qfail,N,Nfail):
     #print(count)
     return count
 
-def over(state):
+def over(state): # check if the game fails: return True if failure
     ball_x = state[0]
     ball_y = state[1]
     paddle_y = state[4]
@@ -210,7 +213,7 @@ def over(state):
         return False
 
 
-def determine_cell(x):
+def determine_cell(x): # determine where the ball is in the 12*12 grids
     for i in range(12):
         if x <= (i+1)/12.0:
             return i
@@ -230,17 +233,20 @@ def main():
     print(np.shape(Q))
     paddle_height = 0.2
     initial = [0.5,0.5,0.03,0.01,0.5-paddle_height/2]
-    training_times = 100000
+    # training Q
+    training_times = 1000000
     for times in range(training_times):
         training(Q,initial,Qfail,N,Nfail)
+    # test
     test_times = 1000
     for times in range(test_times):
         count = testing(Q,initial,Qfail,N,Nfail)
         counts.append(count)
-
-    print(Q)
+    #print("the Q matrix is")
+    #print(Q)
     #print(N)
-    print(counts)
+    print("the average number of bounce off is: ")
+    #print(counts)
     print(np.average(counts))
 if __name__== "__main__":
   main()
