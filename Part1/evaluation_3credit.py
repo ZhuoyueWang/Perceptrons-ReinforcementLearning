@@ -110,12 +110,29 @@ def perceptrons_classifier(image_data,data_labels,image_test,test_labels,epoch,i
     plt.xlabel('epoch')
     plt.title('Training Curve')
     plt.axis([0,epoch,0,1])
-    plt.show()
     plt.savefig('result.png')
-    np.set_printoptions(threshold=np.nan)
-    print(weight[0][0].shape)
-    plt.imshow(np.reshape(weight[0][0],(28,28)),interpolation='nearest')
     plt.show()
+
+    np.set_printoptions(threshold=np.nan)
+    plt.imshow(np.reshape(weight[epoch-1][1],(28,28)),interpolation='nearest')
+    plt.savefig('result1.png')
+    plt.show()
+
+    np.set_printoptions(threshold=np.nan)
+    plt.imshow(np.reshape(weight[epoch-1][3],(28,28)),interpolation='nearest')
+    plt.show()
+    plt.savefig('result3.png')
+
+    np.set_printoptions(threshold=np.nan)
+    plt.imshow(np.reshape(weight[epoch-1][6],(28,28)),interpolation='nearest')
+    plt.show()
+    plt.savefig('result6.png')
+
+    np.set_printoptions(threshold=np.nan)
+    plt.imshow(np.reshape(weight[epoch-1][8],(28,28)),interpolation='nearest')
+    plt.show()
+    plt.savefig('result8.png')
+
 
 #test
     [test_path,test_rows, test_columns] = np.shape(image_test)
