@@ -279,7 +279,7 @@ def testing(Q,initial,Qfail,N,Nfail):
         isWin = 1
     else:
         isWin = 0
-	#print(count)
+    #print(count)
     return count, isWin
 
 def write_csv(Q,initial):
