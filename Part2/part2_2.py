@@ -392,11 +392,11 @@ def over(state): # check if the game fails: return True if failure
     paddle_y = state[4]
     paddle2_y = state[5]
     if (ball_x > 1 and  (ball_y > paddle_y + 0.2 or ball_y < paddle_y)):
-	     return -1
+        return -1
     elif (ball_x < 0 and  (ball_y > paddle2_y + 0.2 or ball_y < paddle2_y)): # the ball passes the paddle
-	     return 1
+        return 1
     else:
-	     return 0
+        return 0
 
 
 def determine_cell(x): # determine where the ball is in the 12*12 grids
