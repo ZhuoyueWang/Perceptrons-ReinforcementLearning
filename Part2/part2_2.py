@@ -54,7 +54,7 @@ def training(Q,initial,Qfail,N,Nfail):
 
     a = np.argmax(Q[idx1][idx2][idx3][idx4][idx5][idx6])
 
-    while (not over(state)):
+    while (over(state) == 0):
         Rs = 0
         alpha = C / (C + N[idx1][idx2][idx3][idx4][idx5][idx6][a])
         N[idx1][idx2][idx3][idx4][idx5][idx6][a] += 1
@@ -188,7 +188,7 @@ def testing(Q,initial,Qfail,N,Nfail):
     paddle2_y = state[5]
 
 
-    while (not over(state)):
+    while (over(state) == 0):
 
 
         # find Q(s,a)
@@ -275,7 +275,12 @@ def testing(Q,initial,Qfail,N,Nfail):
         state = [ball_x,ball_y,velocity_x,velocity_y,paddle_y,paddle2_y]
 
     #print(count)
-    return count
+	if over(state) == 1:
+	     isWin = 1
+	else:
+	     isWin = 0
+	#print(count)
+	return count, isWin
 
 def write_csv(Q,initial):
     state = initial
@@ -384,13 +389,14 @@ def write_csv(Q,initial):
 def over(state): # check if the game fails: return True if failure
     ball_x = state[0]
     ball_y = state[1]
-    paddle_y = state[4]
-    paddle2_y = state[5]
-
-    if (ball_x > 1 and  (ball_y > paddle_y + 0.2 or ball_y < paddle_y)) or (ball_x < 0 and (ball_y > paddle2_y + 0.2 or ball_y < paddle2_y)): # the ball passes the paddle
-        return True
-    else:
-        return False
+	paddle_y = state[4]
+	paddle2_y = state[5]
+	if (ball_x > 1 and  (ball_y > paddle_y + 0.2 or ball_y < paddle_y)):
+	     return -1
+	elif (ball_x < 0 and  (ball_y > paddle2_y + 0.2 or ball_y < paddle2_y)): # the ball passes the paddle
+	     return 1
+	else:
+	     return 0
 
 
 def determine_cell(x): # determine where the ball is in the 12*12 grids
@@ -419,16 +425,19 @@ def main():
         training(Q,initial,Qfail,N,Nfail)
     # test
     test_times = 1000
+    winRate = 0
     for times in range(test_times):
-        count = testing(Q,initial,Qfail,N,Nfail)
+        count,isWin = testing(Q,initial,Qfail,N,Nfail)
         counts.append(count)
+        winRate += isWin
     #print("the Q matrix is")
     #print(Q)
     #print(N)
     print("the average number of bounce off is: ")
     #print(counts)
     print(np.average(counts))
-
+	print("the winning rate is ")
+	print(winRate/test_times)
     write_csv(Q,initial)
 
 
