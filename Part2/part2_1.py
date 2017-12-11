@@ -296,6 +296,8 @@ def over(state): # check if the game fails: return True if failure
 def determine_cell(x,grid): # determine where the ball is in the 12*12 grids
     for i in range(grid):
         if x <= (i+1)/grid*1.0:
+            return i
+
 def determine_cell(x): # determine where the ball is in the 12*12 grids
     for i in range(12):
         if x <= (i+1)/12.0:
