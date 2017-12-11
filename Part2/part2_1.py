@@ -15,6 +15,7 @@ def training(Q,initial,Qfail,N,Nfail,grid):
     count = 0
     # parameters C and gamma
     C = 500
+
     gamma = 0.7
 
     #initial state
@@ -295,6 +296,9 @@ def over(state): # check if the game fails: return True if failure
 def determine_cell(x,grid): # determine where the ball is in the 12*12 grids
     for i in range(grid):
         if x <= (i+1)/grid*1.0:
+def determine_cell(x): # determine where the ball is in the 12*12 grids
+    for i in range(12):
+        if x <= (i+1)/12.0:
             return i
 
 
@@ -317,6 +321,8 @@ def main():
 
     for times in range(training_times):
         training(Q,initial,Qfail,N,Nfail,grid)
+
+    # test
     test_times = 1000
     for times in range(test_times):
         count = testing(Q,initial,Qfail,N,Nfail,grid)
