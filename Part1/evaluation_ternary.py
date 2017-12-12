@@ -148,7 +148,7 @@ def perceptrons_classifier(image_data,data_labels,image_test,test_labels,epoch,i
                 classcount += 1
                 if i == prediction[img]:
                     classificationRate += 1
-        print('Classification rate for digit {0} is {1}'.format(i,round(classificationRate/classcount,3)))
+        print('Classification rate for digit {0} is {1}'.format(i,round(classificationRate/classcount,5)))
         classificationList.append(classificationRate)
 
 	# confusion matrix
@@ -164,13 +164,13 @@ def perceptrons_classifier(image_data,data_labels,image_test,test_labels,epoch,i
                     classcount += 1
                 if prediction[img] == j and test_labels[img] == i:
                     confusion += 1
-            colList.append(round(confusion/float(classcount),3))
+            colList.append(round(confusion/float(classcount),5))
         confusionMatrix.append(colList)
 
     for row in confusionMatrix:
         string=''
         for col in row:
-            string+=str(round(col,2))+' '
+            string+=str(round(col,4))+' '
         print(string)
 
 

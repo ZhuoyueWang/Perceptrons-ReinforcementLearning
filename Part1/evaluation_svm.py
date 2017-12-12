@@ -92,7 +92,7 @@ def main():
                 classcount += 1
                 if i == prediction[img]:
                     classificationRate += 1
-        print('Classification rate for digit {0} is {1}'.format(i,round(classificationRate/classcount,3)))
+        print('Classification rate for digit {0} is {1}'.format(i,round(classificationRate/classcount,4)))
         classificationList.append(classificationRate)
 
 	# confusion matrix
@@ -108,13 +108,13 @@ def main():
                     classcount += 1
                 if prediction[img] == j and test_labels[img] == i:
                     confusion += 1
-            colList.append(round(confusion/float(classcount),3))
+            colList.append(round(confusion/float(classcount),4))
         confusionMatrix.append(colList)
 
     for row in confusionMatrix:
         string=''
         for col in row:
-            string+=str(round(col,2))+' '
+            string+=str(round(col,4))+' '
         print(string)
 
 if __name__== "__main__":
